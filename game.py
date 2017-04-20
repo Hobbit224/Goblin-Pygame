@@ -1,5 +1,6 @@
 import pygame
-
+from math import fabs
+from random import randint
 # in order to use py game, we have top use the init method
 pygame.init()
 
@@ -18,7 +19,8 @@ keys = {
 hero = {
 	'x': 100,
 	'y': 100,
-	'speed': 5
+	'speed': 5,
+	'wins': 0
 }
 
 keys_down = {
@@ -79,7 +81,7 @@ while game_on:
 				keys_down['right'] = False
 
 
-
+# Update hero position
 	if keys_down['up']:
 		hero['y'] -= hero['speed']
 	if keys_down['down']:
@@ -88,11 +90,30 @@ while game_on:
 		hero['x'] += hero['speed']
 	if keys_down['left']:
 		hero['x'] -= hero['speed']
+
+	# COLLISION DETECTION
+	distance_between = fabs(hero['x'] - goblin['x']) + fabs(hero['y'] - goblin['y'])
+	if (distance_between < 32):
+		# generate a random X > 0, X < screen['width']
+		# generate a random Y > 0, Y < screen['height']
+		rand_x = randint(0, screen['width'] - 64)
+		rand_y = randint(0, screen['height'] - 64)
+		goblin['x'] = rand_x
+		goblin['y'] = rand_y
+		hero['wins'] += 1
+
+
+
 	# RENDER
 	# blit takes 2 arguments
 	# 1. What?
 	# 2. Where?
 	pygame_screen.blit(backgroung_image, [0,0])
+
+	# draw hwro wins on the screen
+	font = pygame.font.Font(None, 25)
+	wins_text = font.render(("Wins %d") % (hero['wins']), True, (0,0,0))
+	pygame_screen.blit(wins_text, [40, 40])
 
 	# draw the hero 
 	pygame_screen.blit(hero_image, [hero['x'], hero['y']])
