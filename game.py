@@ -18,13 +18,30 @@ keys = {
 hero = {
 	'x': 100,
 	'y': 100,
-	'speed': 20
+	'speed': 5
 }
+
+keys_down = {
+	"right": False,
+	"left": False,
+	"up": False,
+	"down": False,
+}
+
+
+goblin = {
+	'x': 300,
+	'y': 300,
+	'speed': 5
+}
+
+
 screen_size = (screen["height"], screen["width"])
 pygame_screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption("Goblin Chase")
 backgroung_image = pygame.image.load('images/background.png')
-hero_image =pygame.image.load('images/hero.png')
+hero_image = pygame.image.load('images/hero.png')
+goblin_image = pygame.image.load('images/goblin.png')
 
 # //////////////MAIN GAME LOOP////////////////
 # //////////////MAIN GAME LOOP////////////////
@@ -40,17 +57,37 @@ while game_on:
 		elif event.type == pygame.KEYDOWN:
 			print event.key
 			if event.key == keys['up']:
-				print "User pressed up!"
-				hero['y'] -= hero['speed']
+				keys_down['up'] = True
+				
 			elif event.key == keys['down']:
-				print "User pressed down!"
-				hero['y'] += hero['speed']
+				keys_down['down'] = True
+				
 			elif event.key == keys['right']:
-				print "User pressed right!"
-				hero['x'] += hero['speed']
+				keys_down['right'] = True
+				
 			elif event.key == keys['left']:
-			 print "User pressed down!"
-			 hero['x'] -= hero['speed']
+				keys_down['left'] = True
+			 
+		elif event.type == pygame.KEYUP:
+			if event.key == keys['up']:
+				keys_down['up'] = False
+			if event.key == keys['down']:
+				keys_down['down'] = False
+			if event.key == keys['left']:
+				keys_down['left'] = False
+			if event.key == keys['right']:
+				keys_down['right'] = False
+
+
+
+	if keys_down['up']:
+		hero['y'] -= hero['speed']
+	if keys_down['down']:
+		hero['y'] += hero['speed']
+	if keys_down['right']:
+		hero['x'] += hero['speed']
+	if keys_down['left']:
+		hero['x'] -= hero['speed']
 	# RENDER
 	# blit takes 2 arguments
 	# 1. What?
@@ -59,6 +96,8 @@ while game_on:
 
 	# draw the hero 
 	pygame_screen.blit(hero_image, [hero['x'], hero['y']])
+
+	pygame_screen.blit(goblin_image, [goblin['x'], goblin['y']])
 
 
 	# clear screen for the next time
