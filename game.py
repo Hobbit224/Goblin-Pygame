@@ -37,6 +37,12 @@ goblin = {
 	'speed': 5
 }
 
+monster = {
+	'x': 150,
+	'y': 300,
+	'speed': 5
+}
+
 
 screen_size = (screen["height"], screen["width"])
 pygame_screen = pygame.display.set_mode(screen_size)
@@ -44,6 +50,7 @@ pygame.display.set_caption("Goblin Chase")
 backgroung_image = pygame.image.load('images/background.png')
 hero_image = pygame.image.load('images/hero.png')
 goblin_image = pygame.image.load('images/goblin.png')
+monster_image = pygame.image.load('images/monster.png')
 
 # //////////////MAIN GAME LOOP////////////////
 # //////////////MAIN GAME LOOP////////////////
@@ -96,12 +103,53 @@ while game_on:
 	if (distance_between < 32):
 		# generate a random X > 0, X < screen['width']
 		# generate a random Y > 0, Y < screen['height']
-		rand_x = randint(0, screen['width'] - 64)
-		rand_y = randint(0, screen['height'] - 64)
+		rand_x = randint(0, screen['width'] - 128)
+		rand_y = randint(0, screen['height'] - 128)
 		goblin['x'] = rand_x
 		goblin['y'] = rand_y
 		hero['wins'] += 1
 
+	# GOBLIN MOVEMENT
+	goblins_move = randint(1, 5)
+	if goblins_move == 1:
+		goblin['y'] -= goblin['speed']
+	elif goblins_move == 2:
+		goblin['y'] += goblin['speed']
+	elif goblins_move == 3:
+		goblin['x'] -= goblin['speed']
+	elif goblins_move == 4:
+		goblin['x'] += goblin['speed']
+
+	if goblin['x'] < 64 | goblin['y'] < 64 | goblin['x'] > 500 | goblin['y'] > 460:
+		goblin['speed'] = 0
+
+
+
+
+	# MONSTER MOVE
+	
+	monster_move = randint(1, 5)
+	if monster_move == 1:
+		monster['y'] -= monster['speed']
+
+	elif monster_move == 2:
+		monster['y'] += monster['speed']
+	elif monster_move == 3:
+		monster['x'] -= monster['speed']
+	elif monster_move == 4:
+		goblin['x'] += monster['speed']
+
+	if monster['x'] < 96 | monster['y'] < 96 | monster['x'] > 460 | monster['y'] > 420:
+		monster['speed'] = 0
+
+
+
+
+	# MUSIC
+	# pygame.mixer.music.load('sounds/music.wav')
+	# pygame.mixer.music.play(-1)
+	# win_sound =
+	# lose sound =
 
 
 	# RENDER
@@ -119,6 +167,8 @@ while game_on:
 	pygame_screen.blit(hero_image, [hero['x'], hero['y']])
 
 	pygame_screen.blit(goblin_image, [goblin['x'], goblin['y']])
+
+	pygame_screen.blit(monster_image, [monster['x'], monster['y']])
 
 
 	# clear screen for the next time
