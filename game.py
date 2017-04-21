@@ -34,15 +34,18 @@ keys_down = {
 goblin = {
 	'x': 300,
 	'y': 300,
-	'speed': 5
+	'speed': 5,
+	'direction': 'N'
 }
+
+directions = ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']
 
 monster = {
 	'x': 150,
 	'y': 300,
-	'speed': 5
+	'speed': 5,
+	'direction': 'E'
 }
-
 
 screen_size = (screen["height"], screen["width"])
 pygame_screen = pygame.display.set_mode(screen_size)
@@ -55,10 +58,11 @@ monster_image = pygame.image.load('images/monster.png')
 # //////////////MAIN GAME LOOP////////////////
 # //////////////MAIN GAME LOOP////////////////
 # //////////////MAIN GAME LOOP////////////////
-
+tick = 0
 
 game_on = True
 while game_on: 
+	tick += 1
 	# ---EVENTS!---
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -88,7 +92,7 @@ while game_on:
 				keys_down['right'] = False
 
 
-# Update hero position
+	# HERO MOVE
 	if keys_down['up']:
 		hero['y'] -= hero['speed']
 	if keys_down['down']:
@@ -97,6 +101,17 @@ while game_on:
 		hero['x'] += hero['speed']
 	if keys_down['left']:
 		hero['x'] -= hero['speed']
+
+	if hero['x'] > screen['width']:
+		hero['x'] = 0
+	elif hero['x'] == 0:
+		hero['x'] = screen['width']
+	if hero['y'] > screen['height']:
+		hero['y'] = 0
+	elif hero['y'] < 0:
+		hero['y'] = screen['height']
+
+
 
 	# COLLISION DETECTION
 	distance_between = fabs(hero['x'] - goblin['x']) + fabs(hero['y'] - goblin['y'])
@@ -110,37 +125,93 @@ while game_on:
 		hero['wins'] += 1
 
 	# GOBLIN MOVEMENT
-	goblins_move = randint(1, 5)
-	if goblins_move == 1:
+
+	if goblin['direction'] == 'N':
 		goblin['y'] -= goblin['speed']
-	elif goblins_move == 2:
+	elif goblin['direction'] == 'S':
 		goblin['y'] += goblin['speed']
-	elif goblins_move == 3:
+	elif goblin['direction'] == 'E':
 		goblin['x'] -= goblin['speed']
-	elif goblins_move == 4:
+	elif goblin['direction'] == 'W':
 		goblin['x'] += goblin['speed']
+	if goblin['direction'] == 'NE':
+		goblin['y'] -= goblin['speed']
+		goblin['x'] -= goblin['speed']
+	if goblin['direction'] == 'NW':
+		goblin['y'] -= goblin['speed']
+		goblin['x'] += goblin['speed']
+	if goblin['direction'] == 'SE':
+		goblin['x'] -= goblin['speed']
+		goblin['y'] += goblin['speed']
+	if goblin['direction'] == 'SW':
+		goblin['x'] += goblin['speed']
+		goblin['y'] += goblin['speed']
 
-	if goblin['x'] < 64 | goblin['y'] < 64 | goblin['x'] > 500 | goblin['y'] > 460:
-		goblin['speed'] = 0
+	if (tick % 60 == 0):
+		new_dir = randint(0, len(directions)-1)
+		goblin['direction'] = directions[new_dir]
+
+	if goblin['x'] > screen['width']:
+		goblin['x'] = 0
+	elif goblin['x'] == 0:
+		goblin['x'] = screen['width']
+	if goblin['y'] > screen['height']:
+		goblin['y'] = 0
+	elif goblin['y'] < 0:
+		goblin['y'] = screen['height']
+
+	# goblins_move = randint(1, 5)
+	# if goblins_move == 1:
+	# 	goblin['y'] -= goblin['speed']
+	# elif goblins_move == 2:
+	# 	goblin['y'] += goblin['speed']
+	# elif goblins_move == 3:
+	# 	goblin['x'] -= goblin['speed']
+	# elif goblins_move == 4:
+	# 	goblin['x'] += goblin['speed']
+
+	# if goblin['x'] < 64 | goblin['y'] < 64 | goblin['x'] > 500 | goblin['y'] > 460:
+	# 	goblin['speed'] = 0
 
 
 
 
-	# MONSTER MOVE
+	# MONSTER MOVEMENT
 	
-	monster_move = randint(1, 5)
-	if monster_move == 1:
+	if monster['direction'] == 'N':
 		monster['y'] -= monster['speed']
-
-	elif monster_move == 2:
+	elif monster['direction'] == 'S':
 		monster['y'] += monster['speed']
-	elif monster_move == 3:
+	elif monster['direction'] == 'E':
 		monster['x'] -= monster['speed']
-	elif monster_move == 4:
-		goblin['x'] += monster['speed']
+	elif monster['direction'] == 'W':
+		monster['x'] += monster['speed']
+	if monster['direction'] == 'NE':
+		monster['y'] -= monster['speed']
+		monster['x'] -= monster['speed']
+	if monster['direction'] == 'NW':
+		monster['y'] -= monster['speed']
+		monster['x'] += monster['speed']
+	if monster['direction'] == 'SE':
+		monster['x'] -= monster['speed']
+		monster['y'] += monster['speed']
+	if monster['direction'] == 'SW':
+		monster['x'] += monster['speed']
+		monster['y'] += monster['speed']
 
-	if monster['x'] < 96 | monster['y'] < 96 | monster['x'] > 460 | monster['y'] > 420:
-		monster['speed'] = 0
+
+	if (tick % 60 == 0):
+		new_dir = randint(0, len(directions)-1)
+		monster['direction'] = directions[new_dir]
+
+	if monster['x'] > screen['width']:
+		monster['x'] = 0
+	elif monster['x'] == 0:
+		monster['x'] = screen['width']
+	if monster['y'] > screen['height']:
+		monster['y'] = 0
+	elif monster['y'] < 0:
+		monster['y'] = screen['height']
 
 
 
